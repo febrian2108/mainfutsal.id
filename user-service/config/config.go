@@ -29,7 +29,7 @@ type Database struct {
 	Password              string `json:"password"`
 	MaxOpenConnection     int    `json:"maxOpenConnections"`
 	MaxLifeTimeConnection int    `json:"maxLifeTimeConnections"`
-	MaxIdleConnections    int    `json:"maxIdleConnections"`
+	MaxIdleConnection    int    `json:"maxIdleConnections"`
 	MaxIdleTime           int    `json:"maxIdleTime"`
 }
 
