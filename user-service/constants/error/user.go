@@ -9,7 +9,7 @@ var (
 	ErrPasswordDoesNotMatch = errors.New("password does not match")
 )
 
-var UserError = []error{
+var UserErrors = []error{
 	ErrUserNotFound,
 	ErrPasswordIncorrect,
 	ErrUserAlreadyExists,
