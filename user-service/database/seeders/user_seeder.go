@@ -13,12 +13,12 @@ import (
 func RunUserSeeder(db *gorm.DB) {
 	password, _ := bcrypt.GenerateFromPassword([]byte("admin123"), bcrypt.DefaultCost)
 	user := models.User{
-		UUID : uuid.New(),
-		Username: "admin",
-		Password: string(password),
+		UUID:        uuid.New(),
+		Username:    "admin",
+		Password:    string(password),
 		PhoneNumber: "08123456789",
-		Email: "admin@gmail.com",
-		RoleID: constants.Admin,
+		Email:       "admin@gmail.com",
+		RoleID:      constants.Admin,
 	}
 
 	err := db.FirstOrCreate(&user, models.User{Username: user.Username}).Error
