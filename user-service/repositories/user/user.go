@@ -50,14 +50,14 @@ func (r *UserRepository) Update(ctx context.Context, req *dto.UpdateRequest, uui
 	user := models.User{
 		Name:        req.Name,
 		Username:    req.Username,
-		Password:    req.Password,
+		Password:    *req.Password,
 		PhoneNumber: req.PhoneNumber,
 		Email:       req.Email,
 	}
 
 	err := r.db.WithContext(ctx).
-	Where("uuid = ?", uuid).
-	Updates(&user).Error
+		Where("uuid = ?", uuid).
+		Updates(&user).Error
 	if err != nil {
 		return nil, errWrap.WrapError(errConstant.ErrSQLError)
 	}
@@ -67,9 +67,9 @@ func (r *UserRepository) Update(ctx context.Context, req *dto.UpdateRequest, uui
 func (r *UserRepository) FindByUsername(ctx context.Context, username string) (*models.User, error) {
 	var user models.User
 	err := r.db.WithContext(ctx).
-	Preload("Role").
-	Where("username = ?", username).
-	First(&user).Error
+		Preload("Role").
+		Where("username = ?", username).
+		First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errConstant.ErrUserNotFound
@@ -79,13 +79,12 @@ func (r *UserRepository) FindByUsername(ctx context.Context, username string) (*
 	return &user, nil
 }
 
-
 func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*models.User, error) {
 	var user models.User
 	err := r.db.WithContext(ctx).
-	Preload("Role").
-	Where("email = ?", email).
-	First(&user).Error
+		Preload("Role").
+		Where("email = ?", email).
+		First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errConstant.ErrUserNotFound
@@ -98,9 +97,9 @@ func (r *UserRepository) FindByEmail(ctx context.Context, email string) (*models
 func (r *UserRepository) FindByUUID(ctx context.Context, uuid string) (*models.User, error) {
 	var user models.User
 	err := r.db.WithContext(ctx).
-	Preload("Role").
-	Where("uuid = ?", uuid).
-	First(&user).Error
+		Preload("Role").
+		Where("uuid = ?", uuid).
+		First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errConstant.ErrUserNotFound
