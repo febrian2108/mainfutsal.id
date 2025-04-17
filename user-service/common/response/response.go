@@ -15,7 +15,7 @@ type Response struct {
 	Token   *string     `json:"token,omitempty"`
 }
 
-type ParamHTTPResponse struct {
+type ParamHTTPResp struct {
 	Code    int
 	Err     error
 	Message *string
@@ -24,7 +24,7 @@ type ParamHTTPResponse struct {
 	Token   *string
 }
 
-func HTTPResponse(param ParamHTTPResponse) {
+func HTTPResponse(param ParamHTTPResp) {
 	if param.Err == nil {
 		param.Gin.JSON(param.Code, Response{
 			Status:  constants.Success,
