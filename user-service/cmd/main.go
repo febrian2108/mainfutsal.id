@@ -14,7 +14,6 @@ import (
 	"user-service/repositories"
 	"user-service/routes"
 	"user-service/services"
-
 	"github.com/didip/tollbooth"
 	"github.com/didip/tollbooth/limiter"
 	"github.com/gin-gonic/gin"
