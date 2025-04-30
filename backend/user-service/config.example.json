@@ -1,0 +1,25 @@
+{
+    "port": 8001,
+    "appName": "user-service",
+    "appEnv": "local",
+    "signatureKey": "",
+    "database": {
+        "host": "host.docker.internal",
+        "port": 5434,
+        "name": "",
+        "username": "",
+        "password": "",
+        "maxOpenConnections": 10,
+        "maxLifeTimeConnections": 10,
+        "maxIdleConnections": 10,
+        "maxIdleTime": 10
+    },
+    "kafka": {
+        "bootstrapServers": "kafka:19092",
+        "groupId": "user-service-group"
+    },
+    "rateLimiterMaxRequest": 1000,
+    "rateLimiterTimeSecond": 60,
+    "jwtSecretkey": "",
+    "jwtExpireTime": 1440
+}
