@@ -99,7 +99,7 @@ func validateBearerToken(c *gin.Context, token string) error {
 			return nil, errConstant.ErrInvalidToken
 		}
 
-		jwtSecret := []byte(config.Config.JwtSecretkey)
+		jwtSecret := []byte(config.Config.JwtSecretKey)
 		return jwtSecret, nil
 	})
 

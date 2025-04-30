@@ -45,18 +45,11 @@ func SetEnvFromConsulKV(v *viper.Viper) error {
 			val   string
 		)
 		switch valOf.Kind() {
-		case reflect.String:
-			val = valOf.String()
-		case reflect.Int:
-			val = strconv.Itoa(int(valOf.Int()))
-		case reflect.Uint:
-			val = strconv.Itoa(int(valOf.Uint()))
-		case reflect.Float32:
-			val = strconv.Itoa(int(valOf.Float()))
-		case reflect.Bool:
-			val = strconv.FormatBool(valOf.Bool())
-		default:
-			panic("unsupported type")
+		case reflect.String: val = valOf.String()
+		case reflect.Int: val = strconv.Itoa(int(valOf.Int()))
+		case reflect.Uint: val = strconv.Itoa(int(valOf.Uint()))
+		case reflect.Float32: val = strconv.Itoa(int(valOf.Float()))
+		case reflect.Bool: val = strconv.FormatBool(valOf.Bool())
 		}
 
 		err = os.Setenv(k, val)

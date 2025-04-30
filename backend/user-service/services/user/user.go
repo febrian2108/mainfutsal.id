@@ -47,7 +47,7 @@ func (u *UserService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.Lo
 		return nil, err
 	}
 
-	expirationTime := time.Now().Add(time.Duration(config.Config.JwtExpireTime) * time.Hour).Unix()
+	expirationTime := time.Now().Add(time.Duration(config.Config.JwtExpirationTime) * time.Hour).Unix()
 	data := &dto.UserResponse{
 		UUID:        user.UUID,
 		Name:        user.Name,
@@ -64,7 +64,7 @@ func (u *UserService) Login(ctx context.Context, req *dto.LoginRequest) (*dto.Lo
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-	tokenSting, err := token.SignedString([]byte(config.Config.JwtSecretkey))
+	tokenSting, err := token.SignedString([]byte(config.Config.JwtSecretKey))
 	if err != nil {
 		return nil, err
 	}
