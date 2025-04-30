@@ -2,9 +2,14 @@ package middlewares
 
 import (
 	"context"
-	"crypto/sha512"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 	"user-service/common/response"
@@ -12,12 +17,6 @@ import (
 	"user-service/constants"
 	errConstant "user-service/constants/error"
 	services "user-service/services/user"
-
-	"github.com/didip/tollbooth"
-	"github.com/didip/tollbooth/limiter"
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/sirupsen/logrus"
 )
 
 func HandlePanic() gin.HandlerFunc {
@@ -66,19 +65,19 @@ func responseUnauthorized(c *gin.Context, message string) {
 	c.Abort()
 }
 
-func validateAPIKeys(c *gin.Context) error {
+func validateAPIKey(c *gin.Context) error {
 	apiKey := c.GetHeader(constants.XApiKey)
 	requestAt := c.GetHeader(constants.XRequestAt)
 	serviceName := c.GetHeader(constants.XServiceName)
 	signatureKey := config.Config.SignatureKey
 
 	validateKey := fmt.Sprintf("%s:%s:%s", serviceName, signatureKey, requestAt)
-	hash := sha512.New()
+	hash := sha256.New()
 	hash.Write([]byte(validateKey))
 	resultHash := hex.EncodeToString(hash.Sum(nil))
 
 	if apiKey != resultHash {
-		return fmt.Errorf("invalid api key")
+		return errConstant.ErrUnautorized
 	}
 	return nil
 }
@@ -97,7 +96,7 @@ func validateBearerToken(c *gin.Context, token string) error {
 	tokenJwt, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
-			return nil, errConstant.ErrUnautorized
+			return nil, errConstant.ErrInvalidToken
 		}
 
 		jwtSecret := []byte(config.Config.JwtSecretkey)
@@ -118,7 +117,7 @@ func Authenticate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var err error
 		token := c.GetHeader(constants.Authorization)
-		if token != "" {
+		if token == "" {
 			responseUnauthorized(c, errConstant.ErrUnautorized.Error())
 			return
 		}
@@ -129,12 +128,12 @@ func Authenticate() gin.HandlerFunc {
 			return
 		}
 
-		err = validateAPIKeys(c)
+		err = validateAPIKey(c)
 		if err != nil {
 			responseUnauthorized(c, err.Error())
 			return
 		}
-		c.Next()
 
+		c.Next()
 	}
 }
